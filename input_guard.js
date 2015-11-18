@@ -1,11 +1,11 @@
 /**
  * Returns a new input guard.
  * 
- * A input guard guards an input node that is associated to a set of other input nodes.
+ * An input guard guards an input node that is associated with a set of other input nodes.
  * If all of the associated input nodes are empty, i. e. there's no
  * input in them, the guarded input is disabled. Otherwise it is enabled.
  *
- * @param  {Function} $				The jQuery function object
+ * @param  {Function} $			The jQuery function object
  * @param  {jQuery}   btn_node 		The input node
  * @param  {jQUery}   assoc_nodes	The associated input node set
  */
@@ -17,7 +17,7 @@ function get_input_guard($, btn_node, assoc_nodes) {
 	 * edited or cleared.
 	 *
 	 * @param {Function} cb_is_empty 	 Called with the input nodes. Returns true if nodes are empty.
-	 * @param {string} 	 event_name 	 Name of the event to listen for
+	 * @param {string}   event_name 	 Name of the event to listen for
 	 */
 	function _Input_helper(cb_is_empty, event_name) {
 		this._nodes = {
