@@ -1,15 +1,17 @@
 /**
  * Returns a new input guard.
  * 
- * An input guard guards an input node that is associated with a set of other input nodes.
- * If all of the associated input nodes are empty, i. e. there's no
- * input in them, the guarded input is disabled. Otherwise it is enabled.
+ * An input guard guards a set of input nodes that is associated with another set of other input nodes.
+ * The associated input nodes are being listened to after init() is called on the guard.
+ * If all of the associated input nodes are made empty, i. e. there's no
+ * input in them after an input event, the guarded input set is disabled. If there is input
+ * after the event, the guarded set is enabled.
  *
  * @param  {Function} $			The jQuery function object
- * @param  {jQuery}   btn_node 		The input node
+ * @param  {jQuery}   guard_nodes 	The guarded input nodes
  * @param  {jQUery}   assoc_nodes	The associated input node set
  */
-function get_input_guard($, btn_node, assoc_nodes) {
+function get_input_guard($, guard_nodes, assoc_nodes) {
 	/**
 	 * Input helper.
 	 *
@@ -61,8 +63,6 @@ function get_input_guard($, btn_node, assoc_nodes) {
 
 
 	var text_input = new _Input_helper(function(nodes) {
-		// _is_empty()
-
 		return nodes.filter(function() {
 			return $(this).val().length > 0;
 		}).length === 0;
@@ -70,18 +70,16 @@ function get_input_guard($, btn_node, assoc_nodes) {
 	}, "keyup");
 
 	var checkbox_input = new _Input_helper(function(nodes) {
-		// _is_empty()
-		
 		return !nodes.is(":checked");
 	}, "click");
 
 
 	return {
 		_nodes : {
-			btn : btn_node
+			nodes : guard_nodes
 		},
 
-		_input : null,
+		_assoc_inputs : null,
 
 		/**
 		 * Begin to listen
@@ -92,29 +90,29 @@ function get_input_guard($, btn_node, assoc_nodes) {
 
 			if ($.inArray(node_type, ["text", "number", "checkbox"]) !== -1) {
 				if ($.inArray(node_type, ["text", "number"]) !== -1) {
-					self._input = text_input;
+					self._assoc_inputs = text_input;
 				} else {
-					self._input = checkbox_input;
+					self._assoc_inputs = checkbox_input;
 				}
 			} else {
 				throw new Error("Input type '" + node_type + "' not supported.");
 			}
 
-			self._input.init(assoc_nodes, function() {
-				self._disable_btn();
+			self._assoc_inputs.init(assoc_nodes, function() {
+				self._disable_nodes();
 			}, function() {
-				self._enable_btn();
+				self._enable_nodes();
 			});
 		},
 
 
-		_disable_btn : function() {
-			this._nodes.btn.attr("disabled", true);
+		_disable_nodes : function() {
+			this._nodes.nodes.attr("disabled", true);
 		},
 
 
-		_enable_btn : function() {
-			this._nodes.btn.attr("disabled", false);
+		_enable_nodes : function() {
+			this._nodes.nodes.attr("disabled", false);
 		}
 	};
 };
