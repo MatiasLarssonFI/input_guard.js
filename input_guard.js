@@ -112,7 +112,7 @@ function get_input_guard($, guard_nodes, assoc_nodes) {
 
 
 		_enable_nodes : function() {
-			this._nodes.nodes.attr("disabled", false);
+			this._nodes.nodes.removeAttr("disabled");
 		}
 	};
 };
